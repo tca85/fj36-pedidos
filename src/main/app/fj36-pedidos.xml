@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.1"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8082" basePath="/fj36-pedidos" doc:name="HTTP Listener Configuration"/>
+    <flow name="fj36-pedidosFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" allowedMethods="POST" doc:name="Pedidos Listener"/>
+        <logger message="Recebendo XML: #[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
+        <response>
+            <set-payload value="&lt;resposta&gt;ok&lt;/resposta&gt;" doc:name="Set Payload"/>
+            <set-property propertyName="http.status" value="202" doc:name="Property"/>
+        </response>
+    </flow>
+</mule>
